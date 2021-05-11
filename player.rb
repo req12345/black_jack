@@ -8,7 +8,7 @@ class Player
   end
 
   def get_card(card)
-    @cards << card
+   @cards.size < 3 ? @cards << card : 'Already 3 cards'
   end
 
   def bet
@@ -16,7 +16,7 @@ class Player
   end
 
   def hand(&block)
-    @cards.each(&block) 
+    @cards.each(&block)
   end
 
 end
