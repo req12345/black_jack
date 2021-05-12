@@ -19,8 +19,8 @@ class Game
   def start_game
     auto_deal
     auto_bet
-    players_hand
-    dealer_hand_hidden
+
+
     user_choice
   end
 
@@ -32,9 +32,13 @@ class Game
 
   def auto_deal
     2.times do
-      @player.get_card(@deck.draw_card)
+      player_get_card
       @dealer.get_card(@deck.draw_card)
     end
+  end
+
+  def player_get_card
+    @player.get_card(@deck.draw_card)
   end
 
   def players_hand
@@ -50,17 +54,6 @@ class Game
     @dealer.cards.size.times { puts '*' }
   end
 
-  def user_choice
-    puts "\n1. Skip\n2. Add card\n3. Open cards"
-    choice = gets.chomp.to_i
-
-    case when choice
-    when 1 then skip
-    when 2 then @player.get_card(@deck.draw_card)
-    when 3 then open_cards
-    end
-  end
-
   def skip
     puts "#{@dealer.hand_scores}"
     if @dealer.hand_scores >= 17
@@ -70,6 +63,31 @@ class Game
        @dealer.get_card(@deck.draw_card)
     end
   end
+   # Открыть карты. Открываются карты дилера и игрока, игрок видит сумму очков дилера, идет подсчет результатов игры
+  def open_cards
+    players_hand
+    dealer_hand
+  end
+
+  def user_choice
+    loop do
+      players_hand
+      dealer_hand_hidden
+
+      break if @player.cards.size == 3 && @dealer.cards.size == 3 ||
+
+      puts "\n1. Skip\n2. Add card\n3. Open cards"
+      choice = gets.chomp.to_i
+
+      case choice
+      when 1 then skip
+      when 2 then player_get_card
+      when 3 then open_cards
+      end
+    end
+  end
+
+
 
 end
 
