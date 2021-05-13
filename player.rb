@@ -1,5 +1,5 @@
 class Player
-  attr_accessor :cards
+  attr_accessor :cards, :bank
   attr_reader :total_scores
 
   def initialize(name)
