@@ -49,32 +49,65 @@ class Game
     puts "Total scores: #{@player.hand_scores}"
   end
 
+  def dealer_hand
+    puts 'DEALER cards:'
+    @dealer.hand do |c|
+      puts "#{c.rank}#{c.suit.encode('utf-8')}"
+    end
+    puts "Total scores: #{@dealer.hand_scores}"
+  end
+
   def dealer_hand_hidden
     puts "\nDealer cards:"
     @dealer.cards.size.times { puts '*' }
   end
 
   def skip
-    puts "#{@dealer.hand_scores}"
+    auto_open_cards
     if @dealer.hand_scores >= 17
-      user_choice
-    elsif
+    else
        @dealer.hand_scores < 17 && @dealer.cards.size < 3
        @dealer.get_card(@deck.draw_card)
     end
   end
-   # Открыть карты. Открываются карты дилера и игрока, игрок видит сумму очков дилера, идет подсчет результатов игры
+
   def open_cards
     players_hand
     dealer_hand
+    game_results
+
+  end
+
+  def game_results
+    if "#{@dealer.hand_scores}" > "#{@player.hand_scores}"
+      @dealer.bank += @bank
+      @bank = 0
+      print 'You lose'
+    elsif "#{@dealer.hand_scores}" == "#{@player.hand_scores}"
+      @dealer.bank += @bank / 2
+      @player.bank += @bank / 2
+      @bank = 0
+      print 'Draw'
+    else
+      @player.bank += @bank
+      @bank = 0
+      print 'You are the winner'
+    end
+  end
+
+  def auto_open_cards
+    open_cards if @player.cards.size == 3 && @dealer.cards.size == 3
+  end
+
+  def table_view
+    players_hand
+    dealer_hand_hidden
   end
 
   def user_choice
+    table_view
     loop do
-      players_hand
-      dealer_hand_hidden
-
-      break if @player.cards.size == 3 && @dealer.cards.size == 3 ||
+      auto_open_cards
 
       puts "\n1. Skip\n2. Add card\n3. Open cards"
       choice = gets.chomp.to_i
