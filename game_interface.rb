@@ -7,21 +7,38 @@ require 'byebug'
 class Game
   BET = 10
 
-
   def initialize
     @bank = 0
-    @deck = Deck.new
+    @deck = []
     @dealer = Dealer.new('Dealer')
     puts 'Enter your name'
     @player = Player.new(gets.chomp)
   end
 
+  def interface #добавить цикл старт_гейм. еще?
+    start_game
+    if @player.bank == 0 || @dealer.bank == 0
+      return print 'One of you is no money'
+    else
+      print "\nPlay again? (Y / any button for N)"
+      choice = gets.chomp.capitalize!
+      if choice == "Y"
+        start_game
+      else
+        return
+      end
+    end
+  end
+
   def start_game
+    @deck = Deck.new
+    @dealer.cards.clear
+    @player.cards.clear
     auto_deal
     auto_bet
-
-
-    user_choice
+    menu
+    open_cards
+    game_results
   end
 
   def auto_bet
@@ -42,7 +59,7 @@ class Game
   end
 
   def players_hand
-    puts 'Your cards:'
+    puts "\nYour cards:"
     @player.hand do |c|
       puts "#{c.rank}#{c.suit.encode('utf-8')}"
     end
@@ -63,32 +80,35 @@ class Game
   end
 
   def skip
-    auto_open_cards
     if @dealer.hand_scores >= 17
+      return
+    elsif
+      @dealer.hand_scores < 17 && @dealer.cards.size = 3
+      return
     else
-       @dealer.hand_scores < 17 && @dealer.cards.size < 3
-       @dealer.get_card(@deck.draw_card)
+      @dealer.get_card(@deck.draw_card)
     end
+    menu
   end
 
   def open_cards
     players_hand
     dealer_hand
     game_results
-
   end
 
   def game_results
-    if "#{@dealer.hand_scores}" > "#{@player.hand_scores}"
+    if @dealer.hand_scores > @player.hand_scores && @dealer.hand_scores <= 21
       @dealer.bank += @bank
       @bank = 0
       print 'You lose'
-    elsif "#{@dealer.hand_scores}" == "#{@player.hand_scores}"
-      @dealer.bank += @bank / 2
-      @player.bank += @bank / 2
+    elsif @dealer.hand_scores == @player.hand_scores
+      @dealer.bank = @bank / 2
+      @player.bank = @bank / 2
       @bank = 0
       print 'Draw'
-    else
+    elsif
+      @player.hand_scores <= 21
       @player.bank += @bank
       @bank = 0
       print 'You are the winner'
@@ -96,7 +116,8 @@ class Game
   end
 
   def auto_open_cards
-    open_cards if @player.cards.size == 3 && @dealer.cards.size == 3
+    open_cards
+    game_results
   end
 
   def table_view
@@ -104,24 +125,20 @@ class Game
     dealer_hand_hidden
   end
 
-  def user_choice
-    table_view
+  def menu
     loop do
-      auto_open_cards
-
+      return auto_open_cards if @player.cards.size == 3 && @dealer.cards.size == 3
+      table_view
       puts "\n1. Skip\n2. Add card\n3. Open cards"
       choice = gets.chomp.to_i
 
       case choice
       when 1 then skip
       when 2 then player_get_card
-      when 3 then open_cards
+      when 3 then return open_cards
       end
     end
   end
-
-
-
 end
 
-Game.new.start_game
+Game.new.interface
