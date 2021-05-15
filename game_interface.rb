@@ -16,6 +16,8 @@ class Game
     start_game
   end
 
+  private
+
   def start_game
     puts "Let's play"
     i = 0
