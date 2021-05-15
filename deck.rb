@@ -14,10 +14,10 @@ class Deck
     'J' => 10,
     'Q' => 10,
     'K' => 10,
-    'A' => 11,
-  }
+    'A' => 11
+  }.freeze
 
-  SUITS = ["\u2660", "\u2663", "\u2665", "\u2666"]
+  SUITS = ["\u2660", "\u2663", "\u2665", "\u2666"].freeze
 
   def initialize
     @deck = []
@@ -33,17 +33,7 @@ class Deck
     end
   end
 
-  def output_deck
-    @deck.each do |card|
-      card.output_card
-    end
-  end
-
   def draw_card
-		@deck.shift
-	end
-
-	def shuffle!
-		@deck.shuffle!
-	end
+    @deck.shift
+  end
 end
