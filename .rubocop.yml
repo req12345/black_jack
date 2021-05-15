@@ -1,0 +1,23 @@
+AllCops:
+  Exclude:
+    - 'game_interface.rb'
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 120
+
+Lint/ShadowingOuterLocalVariable:
+  Enabled: false
+
+Metrics/AbcSize:
+  IgnoredMethods:
+    - 'hand_scores'
+
+Metrics/MethodLength:
+  IgnoredMethods:
+    - 'hand_scores'
