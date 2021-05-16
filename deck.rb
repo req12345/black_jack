@@ -1,5 +1,3 @@
-require_relative 'card'
-
 class Deck
   RANK_SCORES = {
     '2' => 2,
