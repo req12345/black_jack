@@ -1,14 +1,10 @@
 class Interface
-  attr_accessor :player, :bank, :deck
+  attr_accessor :player, :bank, :deck, :round_number, :game
 
   BET = 10
 
   def initialize
     @round_number = 0
-  end
-
-  def start_game
-    @game.start_game
   end
 
   def clear_hands(dealer, player)
@@ -19,8 +15,8 @@ class Interface
   def info(dealer, player)
     puts "\n-=-=-=-=-=-=-=-=-=-=-=-=-=-"
     puts "Round № #{@round_number}"
-    puts "#{player.name} —  #{player.bank}"
-    puts "#{dealer.name} —  #{dealer.bank}"
+    puts "#{player.name} —  #{player.cash}"
+    puts "#{dealer.name} —  #{dealer.cash}"
     puts '-=-=-=-=-=-=-=-=-=-=-=-=-=-'
     @round_number += 1
   end
@@ -29,10 +25,8 @@ class Interface
     player.bank -= BET
   end
 
-  def auto_bet(dealer, player, game_bank)
-    player_bet(player)
-    player_bet(dealer)
-    game_bank += BET * 2
+  def start_bet(dealer, player, bank)
+    bank.auto_bet(player, dealer)
   end
 
   def auto_deal(dealer, player, deck)
@@ -63,27 +57,21 @@ class Interface
     dealer.hand.cards.size.times { puts '*' }
   end
 
-def win(player, game_bank)
-  player.player_win(player, game_bank)
-end
-
-  def game_results(dealer, player, game_bank)
+  def game_results(dealer, player, bank)
     puts "\nxXxXxXxXxXxXxXxXxX"
     if (dealer.hand.scores > player.hand.scores) && (dealer.hand.scores <= 21)
-      dealer.bank += game_bank
+      bank.winner(dealer)
       print '     You LOSE'
     elsif (dealer.hand.scores <= 21) && (player.hand.scores > 21)
-      dealer.bank += game_bank
+      bank.winner(dealer)
       print '     You LOSE'
     elsif player.hand.scores > 21 && dealer.hand.scores > 21
-      print '    Lose BOTH'\
+      print '    Lose BOTH'
     elsif dealer.hand.scores == player.hand.scores && dealer.hand.scores <= 21
-      dealer.bank += game_bank/2
-      player.bank += game_bank/2
+      bank.draw(player, dealer)
       print '       DRAW'
     elsif player.hand.scores <= 21
-      player.bank += game_bank
-
+      bank.winner(player)
       print 'You are the WINNER'
     end
     puts "\nxXxXxXxXxXxXxXxXxX"
