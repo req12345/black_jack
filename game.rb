@@ -1,12 +1,14 @@
 require_relative 'card'
 require_relative 'deck'
+require_relative 'bank'
 require_relative 'player'
 require_relative 'hand'
 require_relative 'interface'
 
+
 class Game
   def initialize
-    @bank = 0
+    @bank = Bank.new
     @deck = []
     @dealer = Player.new('Dealer')
     add_player
@@ -24,13 +26,12 @@ class Game
   def start_game
     loop do
       @game_over = false
-      @bank = 0
 
       @interface.clear_hands(@dealer, @player)
 
       @deck = Deck.new
 
-      @interface.auto_bet(@dealer, @player, @bank)
+      @interface.start_bet(@dealer, @player, @bank)
       @interface.auto_deal(@dealer, @player, @deck)
 
       @interface.info(@dealer, @player)
@@ -45,7 +46,7 @@ class Game
       @interface.dealer_hand(@dealer)
       @interface.game_results(@dealer, @player, @bank)
 
-      break if @player.bank.zero? || @dealer.bank.zero?
+      break if @player.cash.zero? || @dealer.cash.zero?
 
       print "\n1. Play again \n0. Exit"
       choice = gets.chomp.to_i
