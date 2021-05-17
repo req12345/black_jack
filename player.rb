@@ -8,7 +8,7 @@ class Player
     @hand = Hand.new
   end
 
-  def bet(money)
+  def bet(_money)
     @cash -= 10
   end
 

@@ -1,10 +1,16 @@
 class Interface
-  attr_accessor :player, :bank, :deck, :round_number, :game
+  attr_accessor :player, :bank, :deck, :round_number, :choice
 
   BET = 10
+  NO_MONEY = "\nSomeone run out of money".freeze
+  GAME_OVER = "\nGame over".freeze
 
   def initialize
     @round_number = 0
+  end
+
+  def game_over
+    puts "\nGame over"
   end
 
   def clear_hands(dealer, player)
@@ -56,6 +62,27 @@ class Interface
     puts "\nDealer cards:"
     dealer.hand.cards.size.times { puts '*' }
   end
+
+  def player_turn(player, deck)
+    puts "\n1. Skip turn\n2. Add card\n3. Open cards"
+    choice = gets.chomp.to_i
+
+    case choice
+    when 1 then nil
+    when 2 then player.hand.get_card(deck.draw_card)
+    when 3 then @game_over = true
+    end
+  end
+
+  def dealer_turn(dealer, deck)
+    dealer.hand.get_card(deck.draw_card) if dealer.hand.scores < 17 && dealer.hand.cards.size < 3
+  end
+
+  def no_money(player, dealer)
+    player.cash.zero? || dealer.cash.zero?
+  end
+
+# rubocop:disable all
 
   def game_results(dealer, player, bank)
     puts "\nxXxXxXxXxXxXxXxXxX"

@@ -1,7 +1,3 @@
-AllCops:
-  Exclude:
-    - 'interface.rb'
-
 Style/FrozenStringLiteralComment:
   Enabled: false
 
@@ -10,12 +6,9 @@ Style/Documentation:
 
 Lint/DuplicateMethods:
   Enabled: false
-  
+
 Metrics/LineLength:
   Max: 120
-
-Lint/ShadowingOuterLocalVariable:
-  Enabled: false
 
 Metrics/AbcSize:
   IgnoredMethods:

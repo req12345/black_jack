@@ -20,9 +20,11 @@ class Bank
 
   def draw(player, dealer)
     player.win(@bank / 2)
-    player.win(@bank / 2)
+    dealer.win(@bank / 2)
     @bank = 0
   end
+
+# rubocop:disable all
 
   def no_money?(player, dealer)
     player.cash > BET
